@@ -1,0 +1,393 @@
+swagger: '2.0'
+info:
+  description: API for Investa
+  version: 1.0.0
+  title: API for Investa (Investasi Tani Nusantara)
+
+  contact:
+    email: agusdwimill@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags:
+# - name: department
+# - name: user
+# - name: schedule
+# - name: presence
+
+paths:
+  /proyek:
+    get:
+      summary: get all proyek data
+      produces:
+      - application/json
+      responses:
+        200:
+          description: get all proyek data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ProyekData'
+      tags:
+        - Proyek
+    post:
+      summary: create new Proyek
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ProyekData'
+      responses:
+        200:
+          description: success created new Proyek Investasi
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: '#/definitions/ProyekData'
+        400:
+          description: Failed Created New Data
+          schema:
+            $ref: '#/definitions/Failed'
+      tags:
+      - Proyek
+
+  /proyek/{id}:
+    get:
+      summary: get proyek with spesific id
+
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success get proyek data details
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/ProyekData'
+        404:
+          description: Proyek doesn't exist
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Proyek id doesn't exist
+      tags:
+      - Proyek Details
+
+    put:
+      summary: edit proyek data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success update proyek data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/ProyekData'
+        400:
+          description: bad payload
+          schema:
+            $ref: '#/definitions/Failed'
+
+      tags:
+      - Proyek Details
+
+    delete:
+      summary: delete proyek data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success delete proyek data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success deleted proyek data
+      tags:
+      - Proyek Details
+
+  /total/dana/:
+    get:
+      summary: Get dana terkumpul from all proyek
+      tags:
+      - Get All Dana Terkumpul
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Succes get data from all proyek
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/AllDana'
+  /total/proyek/:
+    get:
+      summary: Get count proyek from all proyek with true status
+      tags:
+      - GET Count Proyek
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Succes count data proyek
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/AllProyek'
+  /total/proyek/{id}:
+    get:
+      summary: Get count dana sementara from proyek by ID
+      tags:
+      - GET Dana Sementara by ID
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Succes get dana sementara
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/DanaSementara'
+  /total/user/ :
+    get:
+      summary: Get count all user data
+      tags:
+      - GET Count user
+      produces:
+      - apllication/json
+      responses:
+        200:
+          description : Succes count user data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: succes
+              data:
+                $ref: '#/definitions/AllUsers'
+  /investasi :
+    post:
+      summary: User submit data investasi
+      tags:
+      - Investasi
+      produces:
+      - apllication/json
+      responses:
+        200:
+          description : Succes invest
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: succes
+              data:
+                $ref: '#/definitions/Investasi'
+  /login :
+    get:
+      summary : Get login and check
+      tags:
+      - Auth
+      produces:
+      - apllication/json
+      responses:
+        200:
+          description: Succes login
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: succes
+              data:
+                $ref: '#/definitions/DataUser'
+  /register:
+    post:
+      summary : Create user
+      tags:
+      - Auth
+      produces:
+      - apllication/json
+      responses:
+        200:
+          description: Succes created user
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: succes
+              data:
+                $ref: '#/definitions/DataUser'
+
+definitions:
+  ProyekData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      detail_mitra_id:
+        type : integer
+        format: int64
+      sektor_pengajuan_id:
+        type : integer
+        format: int64
+      bank_id:
+        type : integer
+        format: int64
+      nama_kelompok_tani:
+        type : string
+      nama_proyek:
+        type : string
+      pengalaman bertani:
+        type : integer
+      persentase_keuntungan:
+        type : integer
+      nominal_pengajuan:
+        type: integer
+      periode_panen:
+        type : integer
+      atas_nama_rekening:
+        type : string
+      deskripsi_proyek:
+        type : string
+      deskripsi_umum:
+        type : string
+      status_mitra:
+        type : boolean
+      link_dokumen:
+        type: string
+      link_foto:
+        type: string
+  Failed:
+    type: object
+    properties:
+      status:
+        type: string
+        example: Failed
+      message:
+        type: string
+        example: Failed Created Data
+  AllDana:
+    type: object
+    properties:
+      countDana:
+        type: integer
+  AllProyek:
+    type: object
+    properties:
+      countProyek:
+        type: integer
+  AllUsers:
+    type: object
+    properties:
+      countUser:
+        type: integer
+  DanaSementara:
+    type: object
+    properties:
+      totalDana:
+        type: integer
+  Investasi:
+    type: object
+    properties:
+      id :
+        type: integer
+      id_proyek:
+        type: integer
+      id_user_investor:
+        type: integer
+      nominal:
+        type: integer
+      link_bukti_tf:
+        type: string
+  DataUser:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      password:
+        type: string
+      created_at:
+        type: string
+      updated_at:
+        type: string
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /agusdwimilniadi/Investa-Backend/V.1
+schemes:
+ - https
+
